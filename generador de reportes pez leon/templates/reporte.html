@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Reporte bibliométrico del pez león · {{ ctx.generado.strftime('%Y-%m-%d') }}</title>
+<style>
+  :root {
+    --pagina: #f6f5f1; --tarjeta: #ffffff; --tinta: #0b0b0b; --tinta-2: #52514e; --tenue: #6f6e69;
+    --linea: rgba(11, 11, 11, .10); --linea-suave: #ecebe6; --azul-osc: #1c5cab;
+    --azul-lavado: #f1f6fd; --azul-borde: #cde2fb;
+    --aviso-fondo: #fdf5e6; --aviso-borde: #f1d9a6; --aviso-tinta: #6b4505;
+  }
+  * { box-sizing: border-box; }
+  html { color-scheme: light; }
+  body { margin: 0; background: var(--pagina); color: var(--tinta);
+         font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  .contenedor { max-width: 1000px; margin: 0 auto; padding: 40px 20px 64px; counter-reset: seccion; }
+  header.portada { padding: 4px 4px 24px; }
+  .sobretitulo { font-size: 14px; color: var(--azul-osc); font-weight: 600; margin: 0 0 6px; }
+  h1 { font-size: 34px; line-height: 1.15; margin: 0 0 12px; font-weight: 650; letter-spacing: -.01em; }
+  .meta { color: var(--tinta-2); font-size: 14.5px; margin: 0; }
+  .aviso { background: var(--aviso-fondo); border: 1px solid var(--aviso-borde); color: var(--aviso-tinta);
+           border-radius: 12px; padding: 12px 16px; font-size: 14.5px; margin: 0 0 20px; }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 0 0 18px; }
+  .kpi { background: var(--tarjeta); border: 1px solid var(--linea); border-radius: 14px; padding: 16px 18px; }
+  .kpi .etiqueta { font-size: 13px; color: var(--tinta-2); margin: 0; }
+  .kpi .valor { font-size: 30px; font-weight: 650; line-height: 1.2; margin: 6px 0 4px; }
+  .kpi .detalle { font-size: 12.5px; color: var(--tenue); margin: 0; }
+  nav.indice { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 28px; }
+  nav.indice a { font-size: 13.5px; color: var(--tinta-2); text-decoration: none; padding: 5px 12px;
+                 border: 1px solid var(--linea); border-radius: 999px; background: var(--tarjeta); }
+  nav.indice a:hover { color: var(--azul-osc); border-color: var(--azul-borde); }
+  section.tarjeta { background: var(--tarjeta); border: 1px solid var(--linea); border-radius: 16px;
+                    padding: 28px 32px; margin: 0 0 20px; counter-increment: seccion; }
+  section.tarjeta > h2 { font-size: 22px; line-height: 1.3; margin: 0 0 16px; font-weight: 650; }
+  section.tarjeta > h2::before { content: counter(seccion) ". "; color: var(--tenue); font-weight: 500; }
+  h3 { font-size: 16px; margin: 28px 0 8px; font-weight: 600; }
+  .ia { background: var(--azul-lavado); border: 1px solid var(--azul-borde); border-radius: 12px;
+        padding: 14px 18px; margin: 0 0 22px; }
+  .ia-etiqueta { font-size: 12.5px; font-weight: 600; color: var(--azul-osc); margin: 0 0 6px; }
+  .ia p { margin: 0 0 10px; font-size: 15.5px; }
+  .ia p:last-child { margin-bottom: 0; }
+  .ia ul { margin: 2px 0 0; padding-left: 20px; }
+  .ia li { margin: 0 0 6px; font-size: 15.5px; }
+  figure { margin: 26px 0 6px; break-inside: avoid; }
+  figcaption { margin: 0 0 10px; }
+  .fig-titulo { display: block; font-size: 15px; font-weight: 600; }
+  .fig-nota { display: block; font-size: 13px; color: var(--tinta-2); margin-top: 2px; }
+  figure img { display: block; max-width: 100%; height: auto; }
+  details { margin: 10px 0 0; border-top: 1px solid var(--linea-suave); padding-top: 8px; }
+  summary { cursor: pointer; font-size: 13.5px; color: var(--azul-osc); font-weight: 500; }
+  .tabla-wrap { overflow-x: auto; margin: 8px 0 4px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; line-height: 1.45; }
+  th { text-align: left; font-weight: 600; color: var(--tinta-2); border-bottom: 1px solid #d6d5ce;
+       padding: 8px 10px; vertical-align: bottom; }
+  td { padding: 7px 10px; border-bottom: 1px solid var(--linea-suave); vertical-align: top; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .nw { white-space: nowrap; }
+  td a { color: var(--azul-osc); }
+  .nota-tabla { font-size: 12.5px; color: var(--tenue); margin: 4px 0 0; }
+  .notas { margin: 0; padding-left: 20px; }
+  .notas li { margin: 0 0 8px; font-size: 14.5px; color: var(--tinta-2); }
+  footer { color: var(--tenue); font-size: 13px; text-align: center; margin-top: 28px; }
+  @media (max-width: 760px) {
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+    section.tarjeta { padding: 20px 18px; }
+    h1 { font-size: 27px; }
+  }
+  @media print {
+    body { background: #fff; }
+    .contenedor { padding: 0; }
+    nav.indice, summary { display: none; }
+    section.tarjeta, .kpi { border-color: #ddd; }
+    .tabla-wrap { overflow: visible; }
+  }
+</style>
+</head>
+<body>
+{% macro tabla(t) -%}
+<div class="tabla-wrap"><table>
+  <thead><tr>{% for encabezado, clase in t.encabezados %}<th{% if clase %} class="{{ clase }}"{% endif %}>{{ encabezado }}</th>{% endfor %}</tr></thead>
+  <tbody>
+  {% for fila in t.filas %}<tr>{% for celda in fila %}<td{% if celda.clase %} class="{{ celda.clase }}"{% endif %}>{% if celda.url %}<a href="{{ celda.url }}" target="_blank" rel="noopener">{{ celda.texto }}</a>{% else %}{{ celda.texto }}{% endif %}</td>{% endfor %}</tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{%- endmacro %}
+{% macro analisis(texto) -%}
+{% if texto %}<div class="ia"><p class="ia-etiqueta">Análisis con IA</p>{% for parrafo in texto.split('\n\n') %}<p>{{ parrafo }}</p>{% endfor %}</div>{% endif %}
+{%- endmacro %}
+{% macro figura(g, titulo, nota="") -%}
+{% if g %}<figure>
+  <figcaption><span class="fig-titulo">{{ titulo }}</span>{% if nota %}<span class="fig-nota">{{ nota }}</span>{% endif %}</figcaption>
+  <img src="{{ g.src }}" width="{{ g.ancho }}" alt="{{ titulo }}">
+</figure>{% endif %}
+{%- endmacro %}
+{% set nota_incompleto = ("* " ~ ctx.anio_incompleto ~ " está incompleto: datos al " ~ ctx.fecha_datos_txt ~ ".") if ctx.anio_incompleto else "" %}
+
+<main class="contenedor">
+
+  <header class="portada">
+    <p class="sobretitulo">Reporte bibliométrico · CICY</p>
+    <h1>El pez león (<i>Pterois volitans</i>) en la literatura científica</h1>
+    <p class="meta">Fuente: {{ carga.base_origen }}, búsqueda “{{ carga.consulta }}” ({{ carga.archivo_origen }}). Datos al {{ ctx.fecha_datos_txt }}. Generado el {{ generado_txt }}.</p>
+  </header>
+
+  {% if not ia %}<div class="aviso">Este reporte no incluye el análisis con IA porque {{ motivo_sin_ia }}. Las estadísticas y gráficas están completas.</div>{% endif %}
+
+  <div class="kpis">
+    {% for etiqueta, valor, detalle in indicadores %}
+    <div class="kpi"><p class="etiqueta">{{ etiqueta }}</p><p class="valor">{{ valor }}</p><p class="detalle">{{ detalle }}</p></div>
+    {% endfor %}
+  </div>
+
+  <nav class="indice">
+    {% if ia %}<a href="#resumen">Resumen</a>{% endif %}
+    <a href="#produccion">Producción</a>
+    <a href="#temas">Temas</a>
+    <a href="#geografia">Geografía</a>
+    <a href="#actores">Instituciones y autores</a>
+    <a href="#impacto">Impacto</a>
+    <a href="#palabras">Palabras clave</a>
+    <a href="#mexico">México y {{ institucion_foco }}</a>
+    <a href="#notas">Notas</a>
+  </nav>
+
+  {% if ia %}
+  <section class="tarjeta" id="resumen">
+    <h2>Resumen ejecutivo</h2>
+    <div class="ia">
+      <p class="ia-etiqueta">Análisis con IA</p>
+      {% for parrafo in ia.resumen_ejecutivo.split('\n\n') %}<p>{{ parrafo }}</p>{% endfor %}
+      {% if ia.hallazgos %}<p class="ia-etiqueta" style="margin-top:14px">Hallazgos clave</p>
+      <ul>{% for h in ia.hallazgos %}<li>{{ h }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+  </section>
+  {% endif %}
+
+  <section class="tarjeta" id="produccion">
+    <h2>Producción científica en el tiempo</h2>
+    {{ analisis(ia.produccion) }}
+    {{ figura(graficas.anual, "Publicaciones por año, " ~ anio_inicio ~ "–" ~ ctx.anio_final,
+              ("Antes de " ~ anio_inicio ~ " hay " ~ previas_n ~ " publicaciones (" ~ previas_rango ~ "); no se grafican. " if previas_n else "") ~ nota_incompleto) }}
+    <details><summary>Ver datos por año</summary>{{ tabla(tablas.anual) }}</details>
+    <h3>Por quinquenio</h3>
+    {{ tabla(tablas.quinquenio) }}
+    <details><summary>Ver tipos de documento</summary>{{ tabla(tablas.tipos) }}</details>
+  </section>
+
+  <section class="tarjeta" id="temas">
+    <h2>Temas de investigación</h2>
+    {{ analisis(ia.temas) }}
+    {{ figura(graficas.temas, "Publicaciones por tema",
+              "Un artículo puede tener varios temas, por eso los porcentajes suman más de 100 %." ~
+              (" " ~ sin_clasificar ~ " publicaciones no tienen tema asignado." if sin_clasificar else "")) }}
+    {{ figura(graficas.temas_quinquenio, "Temas por quinquenio",
+              "Número de publicaciones; más oscuro = más publicaciones. " ~ nota_incompleto) }}
+    <details><summary>Ver datos de los temas</summary>{{ tabla(tablas.temas) }}{{ tabla(tablas.temas_quinquenio) }}</details>
+    {% if ia.vacios %}
+    <div class="ia" style="margin-top:22px">
+      <p class="ia-etiqueta">Análisis con IA · Posibles vacíos de investigación</p>
+      <ul>{% for v in ia.vacios %}<li>{{ v }}</li>{% endfor %}</ul>
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="tarjeta" id="geografia">
+    <h2>Geografía y colaboración</h2>
+    {{ analisis(ia.geografia) }}
+    {{ figura(graficas.paises, "Los 15 países de afiliación con más publicaciones",
+              "Cuenta las publicaciones con al menos un autor de una institución de ese país. México va resaltado.") }}
+    {{ figura(graficas.colaboracion, "Colaboración nacional e internacional por quinquenio",
+              "El número sobre cada columna es el porcentaje de publicaciones con autores de dos o más países. " ~ nota_incompleto) }}
+    <details><summary>Ver todos los países</summary>{{ tabla(tablas.paises) }}</details>
+    <details><summary>Ver regiones y colaboración</summary>{{ tabla(tablas.regiones) }}{{ tabla(tablas.colaboracion) }}</details>
+  </section>
+
+  <section class="tarjeta" id="actores">
+    <h2>Instituciones y autores</h2>
+    {{ analisis(ia.actores) }}
+    <h3>Instituciones con más publicaciones</h3>
+    {{ tabla(tablas.instituciones) }}
+    <h3>Autores con más publicaciones</h3>
+    {{ tabla(tablas.autores) }}
+    <p class="nota-tabla">* Índice h calculado solo con las publicaciones de esta base, no con la trayectoria completa del autor.</p>
+  </section>
+
+  <section class="tarjeta" id="impacto">
+    <h2>Impacto y difusión</h2>
+    {{ analisis(ia.impacto) }}
+    <h3>Publicaciones más citadas</h3>
+    {{ tabla(tablas.mas_citadas) }}
+    <p class="nota-tabla">Citas en Scopus al momento de la exportación. Citas por año = citas ÷ años desde su publicación.</p>
+    <h3>Revistas con más publicaciones</h3>
+    {{ tabla(tablas.fuentes) }}
+    <details><summary>Ver acceso abierto e idiomas</summary>{{ tabla(tablas.acceso) }}{{ tabla(tablas.idiomas) }}
+      <p class="nota-tabla">Las modalidades de acceso abierto se traslapan: un artículo puede ser Gold y Green a la vez.</p></details>
+  </section>
+
+  <section class="tarjeta" id="palabras">
+    <h2>Palabras clave</h2>
+    {{ analisis(ia.palabras_clave) }}
+    {{ tabla(tablas.palabras) }}
+    <p class="nota-tabla">Ordenadas por uso como palabra clave de autor. Se excluyen términos genéricos como “Lionfish” o “Pterois volitans” y se unen variantes (plurales y sinónimos).</p>
+  </section>
+
+  <section class="tarjeta" id="mexico">
+    <h2>México y {{ institucion_foco }}</h2>
+    {{ analisis(ia.mexico) }}
+    <h3>Instituciones mexicanas con más publicaciones</h3>
+    {{ tabla(tablas.mexico_inst) }}
+    <h3>Publicaciones con participación de {{ institucion_foco }}</h3>
+    {% if tablas.foco.filas %}{{ tabla(tablas.foco) }}{% else %}<p class="nota-tabla">No se encontraron publicaciones con “{{ institucion_foco }}” en la afiliación.</p>{% endif %}
+    <details><summary>Ver todas las publicaciones con participación de México ({{ tablas.mexico_pubs.filas|length }})</summary>{{ tabla(tablas.mexico_pubs) }}</details>
+  </section>
+
+  <section class="tarjeta" id="notas">
+    <h2>Notas metodológicas</h2>
+    <ul class="notas">
+      <li>Los datos vienen de una exportación de {{ carga.base_origen }} ({{ carga.total_registros }} registros, búsqueda “{{ carga.consulta }}”) cargada en MySQL el {{ ctx.fecha_datos_txt }}.</li>
+      <li>“País” es el país de la institución de los autores (afiliación), no el sitio donde se estudió al pez león.</li>
+      <li>Se usa conteo completo: una publicación con autores de tres países suma una a cada país. Por eso los porcentajes por país, región, institución y tema no suman 100 %.</li>
+      <li>Los temas se asignaron con el método: {{ metodos_tema or "sin dato" }} (“reglas” = clasificación automática por palabras clave en la carga).</li>
+      {% if ctx.anio_incompleto %}<li>{{ ctx.anio_incompleto }} está incompleto. Además, las publicaciones recientes tienen menos citas porque han tenido menos tiempo para acumularlas.</li>{% endif %}
+      {% if ia %}<li>Los textos marcados como “Análisis con IA” los redactó Claude ({{ modelo }}) a partir de las estadísticas de este reporte. Conviene revisarlos antes de citarlos.</li>{% endif %}
+    </ul>
+  </section>
+
+  <footer>Generado con report_generator.py · Python, pandas, matplotlib{% if ia %} y Claude ({{ modelo }}){% endif %} · Base de datos pez_leon_bibliometria</footer>
+</main>
+<script>
+  window.addEventListener("beforeprint", function () {
+    document.querySelectorAll("details").forEach(function (d) { d.open = true; });
+  });
+</script>
+</body>
+</html>
